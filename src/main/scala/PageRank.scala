@@ -8,6 +8,7 @@ object PageRank {
      */
     def equal(pages: Map[String, WebPage]): Map[String, Double] = {
         Map() // TODO: remove this stub and implement this method
+        pages.map{case (k, v) => k -> 1.0}
     }
 
     /**
