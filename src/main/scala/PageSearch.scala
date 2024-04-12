@@ -1,5 +1,5 @@
 import scala.math.log
-import scala.collection.parallel.CollectionConverters._
+import scala.collection.parallel.CollectionConverters.*
 
 object PageSearch {
     /**
@@ -9,7 +9,8 @@ object PageSearch {
      */
     def count(pages: List[RankedWebPage], query: List[String]): List[Double] = {
         List() // TODO: implement this method and remove this stub
-        pages.map(p => (query.count(q => p.name.contains(q))) + (query.count(q => p.url.contains(q))) + (query.count(q => p.text.contains(q))) + (query.count(q => p.links.contains(q))))
+//        pages.map(p => query.count(q => p.name.contains(q)) + query.count(q => p.url.contains(q)) + query.count(q => p.text.contains(q)) + query.count(q => p.links.contains(q)))
+        pages.map(page => query.count(page.text.contains(_)))
     }
 
     /**
