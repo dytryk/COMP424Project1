@@ -16,7 +16,7 @@ import scala.util.Sorting
         val pages: Map[String, WebPage] = mapWebPages(loadWebPages()) // completed for you
 
         // Measure the importance of each page using one of the functions in PageRank
-        val rankedPages: List[RankedWebPage] = PageRank.equal(mapWebPages(loadWebPages())).toList.map{case(page, weight) => RankedWebPage(pages(page), weight)}
+        val rankedPages: List[RankedWebPage] = PageRank.pagerank(mapWebPages(loadWebPages())).toList.map{case(page, weight) => RankedWebPage(pages(page), weight)}
 
         // Get user input then perform search until ":quit" is entered
         var query: String = ""
@@ -32,7 +32,7 @@ import scala.util.Sorting
           // Measure the textual match of each page to these terms using one of the functions in PageSearch
           val searchedPages: List[SearchedWebPage] = mapWebPages(loadWebPages()).values.map { webPage =>
             val rankedPage = rankedPages.find(_.id == webPage.id).getOrElse(rankedPages.head)
-            val textMatch = PageSearch.count(List(rankedPage), terms).head
+            val textMatch = PageSearch.tf(List(rankedPage), terms).head
             new SearchedWebPage(rankedPage, textMatch)
           }.toList
 
