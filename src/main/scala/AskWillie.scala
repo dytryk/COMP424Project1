@@ -24,7 +24,6 @@ import scala.util.Sorting
 
 
         val rankedPages: List[RankedWebPage] = pages.map { case (id, page) =>
-            //QUINCY: change this line's method call "PageRank.pagerank(pages).getOrElse(id, 1.0))" e.g. "//QUINCY: change this line's method call  "PageRank.indegree(pages).getOrElse(id, 1.0))" for testing
             new RankedWebPage(page, PageRank.indegree(pages).getOrElse(id, 1.0))
         }.toList
 
@@ -54,7 +53,6 @@ import scala.util.Sorting
 
 
           val searchedPages = rankedPages.map { rp =>
-              // QUINCY: change the below line's method call for testing e.g. "new SearchedWebPage(rp, PageSearch.tfidf(List(rp), terms).head)" to "new SearchedWebPage(rp, PageSearch.tf(List(rp), terms).head)"
               new SearchedWebPage(rp, PageSearch.tfidf(List(rp), terms).head)
           } // call PageSearch.???? here
 
