@@ -15,8 +15,19 @@ import scala.util.Sorting
         // Load WebPage.id -> WebPage map to better handle graph
         val pages: Map[String, WebPage] = mapWebPages(loadWebPages()) // completed for you
 
+
+
+
+
         // Measure the importance of each page using one of the functions in PageRank
-        val rankedPages: List[RankedWebPage] = PageRank.pagerank(mapWebPages(loadWebPages())).toList.map{case(page, weight) => RankedWebPage(pages(page), weight)}
+//        val rankedPages: List[RankedWebPage] = PageRank.pagerank(mapWebPages(loadWebPages())).toList.map{case(page, weight) => RankedWebPage(pages(page), weight)}
+
+
+        val rankedPages: List[RankedWebPage] = pages.map { case (id, page) =>
+            //QUINCY: change this line's method call "PageRank.pagerank(pages).getOrElse(id, 1.0))" e.g. "//QUINCY: change this line's method call  "PageRank.indegree(pages).getOrElse(id, 1.0))" for testing
+            new RankedWebPage(page, PageRank.indegree(pages).getOrElse(id, 1.0))
+        }.toList
+
 
         // Get user input then perform search until ":quit" is entered
         var query: String = ""
@@ -29,18 +40,32 @@ import scala.util.Sorting
             // this is the last line in the expression i.e. the condition of our while loop
             terms != List(":quit")
         } do {
+
+
+
+
+
           // Measure the textual match of each page to these terms using one of the functions in PageSearch
-          val searchedPages: List[SearchedWebPage] = mapWebPages(loadWebPages()).values.map { webPage =>
-            val rankedPage = rankedPages.find(_.id == webPage.id).getOrElse(rankedPages.head)
-            val textMatch = PageSearch.tf(List(rankedPage), terms).head
-            new SearchedWebPage(rankedPage, textMatch)
-          }.toList
+//          val searchedPages: List[SearchedWebPage] = mapWebPages(loadWebPages()).values.map { webPage =>
+//            val rankedPage = rankedPages.find(_.id == webPage.id).getOrElse(rankedPages.head)
+//            val textMatch = PageSearch.tfidf(List(rankedPage), terms).head
+//            new SearchedWebPage(rankedPage, textMatch)
+//          }.toList
+
+
+          val searchedPages = rankedPages.map { rp =>
+              // QUINCY: change the below line's method call for testing e.g. "new SearchedWebPage(rp, PageSearch.tfidf(List(rp), terms).head)" to "new SearchedWebPage(rp, PageSearch.tf(List(rp), terms).head)"
+              new SearchedWebPage(rp, PageSearch.tfidf(List(rp), terms).head)
+          } // call PageSearch.???? here
+
+
+
 
           // normalize the ranges for weight and textmatch on these pages
           val pageArray = SearchedWebPageNormalize.normalize(searchedPages).toArray
           // sort this array based on the chosen averaging scheme i.e.
           //    (ArithmeticOrdering || GeometricOrdering || HarmonicOrdering)
-          Sorting.quickSort(pageArray)(ArithmeticOrdering) // TODO: change this from name ordering to something else!!!
+          Sorting.quickSort(pageArray)(HarmonicOrdering) // TODO: change this from name ordering to something else!!!
           // Print the top ranked pages in descending order
           for p <- pageArray.reverse.slice(0, 10) do println(f"${p.name}%-15s  ${p.url}")
           // print a divider to make reading the results easier
